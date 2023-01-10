@@ -56,30 +56,16 @@ const WatchList = () => {
   }
 
   const updateBooking = async(id) => {
-    try {
-      await setDoc(doc(db, 'booking', id), {
-        watched: true
-      }, {merge: true})
-    }
-    catch(e) {
-      console.log(e)
-    }
+    await setDoc(doc(db, 'bookings', id), {
+      watched: true
+    });
     console.log('updated:' + id)
   }
 
-  const deleteBooking = async(id) => {
-    try {
-      await deleteDoc(doc(db, 'booking', id));
-    }
-    catch(e) {
-      console.log(e)
-    }
-    console.log('deleted:' + id)
+  const deleteBooking = (id) => {
+    console.log(id);
+    deleteDoc(doc(db,'bookings', id));
   }
-
-  useEffect(() => {
-    deleteBooking(id);
-  },[id])
 
   return (
     <View style = {styles.background}>

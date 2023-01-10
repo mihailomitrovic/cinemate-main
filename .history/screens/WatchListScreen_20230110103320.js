@@ -2,7 +2,7 @@ import {View, Text, StyleSheet, FlatList, Switch, TouchableOpacity} from 'react-
 import CheckBox from 'react-native-bouncy-checkbox'
 import React from 'react'
 import { auth, db } from '../firebase'
-import { deleteDoc, doc, getDoc, setDoc} from '@firebase/firestore'
+import { doc, getDoc, setDoc, updateDoc} from '@firebase/firestore'
 import { useEffect, useState, setState } from 'react'
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 
@@ -55,31 +55,9 @@ const WatchList = () => {
     setWatched(previousState => !previousState);
   }
 
-  const updateBooking = async(id) => {
-    try {
-      await setDoc(doc(db, 'booking', id), {
-        watched: true
-      }, {merge: true})
-    }
-    catch(e) {
-      console.log(e)
-    }
-    console.log('updated:' + id)
+  function updateBooking(item) {
+    console.log('e')
   }
-
-  const deleteBooking = async(id) => {
-    try {
-      await deleteDoc(doc(db, 'booking', id));
-    }
-    catch(e) {
-      console.log(e)
-    }
-    console.log('deleted:' + id)
-  }
-
-  useEffect(() => {
-    deleteBooking(id);
-  },[id])
 
   return (
     <View style = {styles.background}>
@@ -106,10 +84,8 @@ const WatchList = () => {
             <Text style = {styles.basic}>{item.data().day} - {item.data().showtime}</Text>
           </View>
           <View style = {styles.deleteContainer}>
-            <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id)}}>
-              <Text>Update</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style = {styles.delete} onPress = {() => {deleteBooking(item.id)}}>
+            <CheckBox size = {23} fillColor = {"#c9a76d"} styles = {styles.switch} onPress={updateBooking(item)} isChecked = {!watched}/>
+            <TouchableOpacity style = {styles.delete}>
               <Text style = {styles.deleteText}>X</Text>
             </TouchableOpacity>
           </View>
@@ -183,7 +159,7 @@ const styles = StyleSheet.create({
   },
   delete: {
     backgroundColor: '#e43e54',
-    padding: 10,
+    padding:10,
     borderRadius: 10,
   },
   deleteText: {

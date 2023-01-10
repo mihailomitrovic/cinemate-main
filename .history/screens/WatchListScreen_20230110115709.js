@@ -74,12 +74,8 @@ const WatchList = () => {
     catch(e) {
       console.log(e)
     }
-    console.log('deleted:' + id)
+    console.log('deleted' + id)
   }
-
-  useEffect(() => {
-    deleteBooking(id);
-  },[id])
 
   return (
     <View style = {styles.background}>

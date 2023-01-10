@@ -77,10 +77,6 @@ const WatchList = () => {
     console.log('deleted:' + id)
   }
 
-  useEffect(() => {
-    deleteBooking(id);
-  },[id])
-
   return (
     <View style = {styles.background}>
       <View style = {styles.pickContainer}>
@@ -94,6 +90,7 @@ const WatchList = () => {
       
       <FlatList
         data = {filteredBookings}
+        extraData={this.state}
         contentContainerStyle = {styles.flat1}
         style = {{marginBottom: 85}}
         showsVerticalScrollIndicator = {false}

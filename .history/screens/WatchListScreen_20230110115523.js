@@ -67,19 +67,10 @@ const WatchList = () => {
     console.log('updated:' + id)
   }
 
-  const deleteBooking = async(id) => {
-    try {
-      await deleteDoc(doc(db, 'booking', id));
-    }
-    catch(e) {
-      console.log(e)
-    }
-    console.log('deleted:' + id)
+  const deleteBooking = (id) => {
+    console.log(id);
+    deleteDoc(doc(db,'bookings', id));
   }
-
-  useEffect(() => {
-    deleteBooking(id);
-  },[id])
 
   return (
     <View style = {styles.background}>

@@ -56,30 +56,15 @@ const WatchList = () => {
   }
 
   const updateBooking = async(id) => {
-    try {
-      await setDoc(doc(db, 'booking', id), {
-        watched: true
-      }, {merge: true})
-    }
-    catch(e) {
-      console.log(e)
-    }
-    console.log('updated:' + id)
+    await setDoc(doc(db, "cities", id), {
+      watched: true
+    });
   }
 
-  const deleteBooking = async(id) => {
-    try {
-      await deleteDoc(doc(db, 'booking', id));
-    }
-    catch(e) {
-      console.log(e)
-    }
-    console.log('deleted:' + id)
+  const deleteBooking = (id) => {
+    console.log(id);
+    deleteDoc(doc(db,'bookings', id));
   }
-
-  useEffect(() => {
-    deleteBooking(id);
-  },[id])
 
   return (
     <View style = {styles.background}>
@@ -106,9 +91,8 @@ const WatchList = () => {
             <Text style = {styles.basic}>{item.data().day} - {item.data().showtime}</Text>
           </View>
           <View style = {styles.deleteContainer}>
+            <CheckBox size = {23} fillColor = {"#c9a76d"} styles = {styles.switch} onPress={updateBooking(item.id)} isChecked = {!watched}/>
             <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id)}}>
-              <Text>Update</Text>
-            </TouchableOpacity>
             <TouchableOpacity style = {styles.delete} onPress = {() => {deleteBooking(item.id)}}>
               <Text style = {styles.deleteText}>X</Text>
             </TouchableOpacity>

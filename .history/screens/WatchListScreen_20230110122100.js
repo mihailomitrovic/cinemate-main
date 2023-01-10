@@ -70,16 +70,13 @@ const WatchList = () => {
   const deleteBooking = async(id) => {
     try {
       await deleteDoc(doc(db, 'booking', id));
+      setBookings(querySnapshot.docs);
     }
     catch(e) {
       console.log(e)
     }
     console.log('deleted:' + id)
   }
-
-  useEffect(() => {
-    deleteBooking(id);
-  },[id])
 
   return (
     <View style = {styles.background}>
@@ -94,6 +91,7 @@ const WatchList = () => {
       
       <FlatList
         data = {filteredBookings}
+        extraData={this.state}
         contentContainerStyle = {styles.flat1}
         style = {{marginBottom: 85}}
         showsVerticalScrollIndicator = {false}

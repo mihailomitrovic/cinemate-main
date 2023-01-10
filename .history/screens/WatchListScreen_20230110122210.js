@@ -70,16 +70,13 @@ const WatchList = () => {
   const deleteBooking = async(id) => {
     try {
       await deleteDoc(doc(db, 'booking', id));
+      getBookings();
     }
     catch(e) {
       console.log(e)
     }
     console.log('deleted:' + id)
   }
-
-  useEffect(() => {
-    deleteBooking(id);
-  },[id])
 
   return (
     <View style = {styles.background}>
