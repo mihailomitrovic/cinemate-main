@@ -40,8 +40,8 @@ const WatchList = () => {
     });
   }
 
-  const toggleSwitch = () =>{
-    if(watched == true){
+  /*const toggleSwitch = () =>{
+    if(!watched){
       setFilteredBookings(bookings.filter(function(item){
         return item.data().watched == true;
       }))
@@ -53,24 +53,28 @@ const WatchList = () => {
       }))
     }
     setWatched(previousState => !previousState);
+  } */
+
+  const [watchedMovies, setWatchedMovies] = useState([]);
+  const [toWatchMovies, setToWatchMovies] = useState([]);
+
+
+  const filterBookings = () => {
+    if(!watched){
+      setToWatchMovies(bookings.filter(function(item){
+        return item.data().watched == true;
+      }))
+    } else {
+      setWatchedMovies(bookings.filter(function(item){
+        return item.data().watched == false;
+      }))
+    }
   }
 
   const updateBooking = async(id) => {
     try {
       await setDoc(doc(db, 'booking', id), {
         watched: true
-      }, {merge: true})
-    }
-    catch(e) {
-      console.log(e)
-    }
-    console.log('postaje watched:' + id)
-  }
-
-  const updateBooking1 = async(id) => {
-    try {
-      await setDoc(doc(db, 'booking', id), {
-        watched: false
       }, {merge: true})
     }
     catch(e) {
@@ -94,15 +98,16 @@ const WatchList = () => {
     setFilteredBookings(resultOfFiltering)
   }, [bookings])
 
+  /*<Switch 
+          trackColor={{true:'#c9a76d'}}
+          onValueChange = {toggleSwitch}
+          value = {watched}
+        /> */
+
   return (
     <View style = {styles.background}>
       <View style = {styles.pickContainer}>
         <Text style = {styles.pick}>{text}</Text>
-        <Switch 
-          trackColor={{true:'#c9a76d'}}
-          onValueChange = {toggleSwitch}
-          value = {watched == false}
-        />
       </View>
       
       <FlatList
@@ -111,7 +116,6 @@ const WatchList = () => {
         style = {{marginBottom: 85}}
         showsVerticalScrollIndicator = {false}
         numColumns = {1}
-        extraData = {watched}
 
         renderItem  = {({item}) => (
           <View style = {styles.listItem}>
@@ -121,11 +125,46 @@ const WatchList = () => {
           </View>
           <View style = {styles.deleteContainer}>
             {item.data().watched == true ? (
-                <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id)}}>
+                <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id); setFilteredBookings();}}>
                 <Image source={require('../assets/watched.png')} style = {styles.buttonIcon} />
                 </TouchableOpacity>
             ) : (
-            <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id)}}>
+            <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id); setFilteredBookings();}}>
+            <Image source={require('../assets/towatch.png')} style = {styles.buttonIcon} />
+            </TouchableOpacity>)}
+
+            <TouchableOpacity style = {styles.delete} onPress = {() => {deleteBooking(item.id); setFilteredBookings();}}>
+              <Image source={require('../assets/remove.png')} style = {styles.buttonIcon} />
+            </TouchableOpacity>
+          </View>
+          </View>
+        )}
+      />
+
+<View style = {styles.pickContainer}>
+        <Text style = {styles.pick}>To watch</Text>
+      </View>
+      
+      <FlatList
+        data = {filteredBookings}
+        contentContainerStyle = {styles.flat1}
+        style = {{marginBottom: 85}}
+        showsVerticalScrollIndicator = {false}
+        numColumns = {1}
+
+        renderItem  = {({item}) => (
+          <View style = {styles.listItem}>
+          <View style = {styles.itemData}>
+            <Text style = {styles.basicBold}>{item.data().movie}</Text>
+            <Text style = {styles.basic}>{item.data().day} - {item.data().showtime}</Text>
+          </View>
+          <View style = {styles.deleteContainer}>
+            {item.data().watched == true ? (
+                <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id); setFilteredBookings();}}>
+                <Image source={require('../assets/watched.png')} style = {styles.buttonIcon} />
+                </TouchableOpacity>
+            ) : (
+            <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id); setFilteredBookings();}}>
             <Image source={require('../assets/towatch.png')} style = {styles.buttonIcon} />
             </TouchableOpacity>)}
 

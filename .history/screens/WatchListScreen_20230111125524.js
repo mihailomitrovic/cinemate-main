@@ -41,7 +41,7 @@ const WatchList = () => {
   }
 
   const toggleSwitch = () =>{
-    if(watched == true){
+    if(!watched){
       setFilteredBookings(bookings.filter(function(item){
         return item.data().watched == true;
       }))
@@ -89,6 +89,8 @@ const WatchList = () => {
     console.log('deleted:' + id)
   }
 
+  const [rerenderToggle, setRerenderToggle] = useState(true);
+
   useEffect(() => {
     const resultOfFiltering = bookings
     setFilteredBookings(resultOfFiltering)
@@ -101,7 +103,7 @@ const WatchList = () => {
         <Switch 
           trackColor={{true:'#c9a76d'}}
           onValueChange = {toggleSwitch}
-          value = {watched == false}
+          value = {watched}
         />
       </View>
       
@@ -111,7 +113,6 @@ const WatchList = () => {
         style = {{marginBottom: 85}}
         showsVerticalScrollIndicator = {false}
         numColumns = {1}
-        extraData = {watched}
 
         renderItem  = {({item}) => (
           <View style = {styles.listItem}>

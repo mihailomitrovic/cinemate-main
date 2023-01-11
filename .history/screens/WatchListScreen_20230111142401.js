@@ -37,6 +37,7 @@ const WatchList = () => {
         a.push(doc.data());
       });
       setBookings(querySnapshot.docs);
+
     });
   }
 

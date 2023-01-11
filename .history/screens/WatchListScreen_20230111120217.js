@@ -41,7 +41,7 @@ const WatchList = () => {
   }
 
   const toggleSwitch = () =>{
-    if(watched == true){
+    if(!watched){
       setFilteredBookings(bookings.filter(function(item){
         return item.data().watched == true;
       }))
@@ -59,18 +59,6 @@ const WatchList = () => {
     try {
       await setDoc(doc(db, 'booking', id), {
         watched: true
-      }, {merge: true})
-    }
-    catch(e) {
-      console.log(e)
-    }
-    console.log('postaje watched:' + id)
-  }
-
-  const updateBooking1 = async(id) => {
-    try {
-      await setDoc(doc(db, 'booking', id), {
-        watched: false
       }, {merge: true})
     }
     catch(e) {
@@ -101,7 +89,7 @@ const WatchList = () => {
         <Switch 
           trackColor={{true:'#c9a76d'}}
           onValueChange = {toggleSwitch}
-          value = {watched == false}
+          value = {watched}
         />
       </View>
       
@@ -111,7 +99,6 @@ const WatchList = () => {
         style = {{marginBottom: 85}}
         showsVerticalScrollIndicator = {false}
         numColumns = {1}
-        extraData = {watched}
 
         renderItem  = {({item}) => (
           <View style = {styles.listItem}>
@@ -121,11 +108,11 @@ const WatchList = () => {
           </View>
           <View style = {styles.deleteContainer}>
             {item.data().watched == true ? (
-                <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id)}}>
+                <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id); setFilteredBookings();}}>
                 <Image source={require('../assets/watched.png')} style = {styles.buttonIcon} />
                 </TouchableOpacity>
             ) : (
-            <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id)}}>
+            <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id); setFilteredBookings();}}>
             <Image source={require('../assets/towatch.png')} style = {styles.buttonIcon} />
             </TouchableOpacity>)}
 

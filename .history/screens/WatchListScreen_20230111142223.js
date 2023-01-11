@@ -31,13 +31,8 @@ const WatchList = () => {
 
   const getBookings = async () =>{
     const q = query(bookingsRef, where("users","array-contains",auth.currentUser.uid)); // basic kveri
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const a = [];
-        querySnapshot.forEach((doc) => {            
-        a.push(doc.data());
-      });
-      setBookings(querySnapshot.docs);
-    });
+      setBookings(q);
+    };
   }
 
   const toggleSwitch = () =>{

@@ -19,6 +19,7 @@ const WatchList = () => {
   const bookingsRef = collection(db, "booking"); // imamo ref ka bazi
   
   const [bookings, setBookings] = useState({});
+
   useEffect(() => {
     getUser();
     getBookings();

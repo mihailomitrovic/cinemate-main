@@ -13,6 +13,7 @@ const WatchList = () => {
   const docRef = doc(db, 'users', uid);
   const [user, setUser] = useState({});
   const [watched, setWatched] = useState(true);
+  const [towatch, setToWatch] = useState(true);
   const [text, setText] = useState('To watch');
   const [filteredBookings, setFilteredBookings] = useState(bookings);
   
@@ -40,8 +41,10 @@ const WatchList = () => {
     });
   }
 
+  const [rerenderToggle, setRerenderToggle] = useState(true);
+
   const toggleSwitch = () =>{
-    if(watched == true){
+    if(!watched){
       setFilteredBookings(bookings.filter(function(item){
         return item.data().watched == true;
       }))
@@ -53,6 +56,7 @@ const WatchList = () => {
       }))
     }
     setWatched(previousState => !previousState);
+    setToWatch(previousState => !previousState);
   }
 
   const updateBooking = async(id) => {
@@ -60,6 +64,7 @@ const WatchList = () => {
       await setDoc(doc(db, 'booking', id), {
         watched: true
       }, {merge: true})
+      setRerenderToggle(!rerenderToggle)
     }
     catch(e) {
       console.log(e)
@@ -101,7 +106,7 @@ const WatchList = () => {
         <Switch 
           trackColor={{true:'#c9a76d'}}
           onValueChange = {toggleSwitch}
-          value = {watched == false}
+          value = {watched}
         />
       </View>
       
@@ -111,7 +116,7 @@ const WatchList = () => {
         style = {{marginBottom: 85}}
         showsVerticalScrollIndicator = {false}
         numColumns = {1}
-        extraData = {watched}
+        extraData = {[watched, rerenderToggle]}
 
         renderItem  = {({item}) => (
           <View style = {styles.listItem}>

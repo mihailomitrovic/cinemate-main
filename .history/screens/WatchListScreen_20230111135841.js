@@ -37,6 +37,8 @@ const WatchList = () => {
         a.push(doc.data());
       });
       setBookings(querySnapshot.docs);
+      const result = Array.isArray(bookings);
+      console.log(result);
     });
   }
 

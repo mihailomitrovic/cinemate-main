@@ -41,7 +41,7 @@ const WatchList = () => {
   }
 
   const toggleSwitch = () =>{
-    if(watched == true){
+    if(watched){
       setFilteredBookings(bookings.filter(function(item){
         return item.data().watched == true;
       }))

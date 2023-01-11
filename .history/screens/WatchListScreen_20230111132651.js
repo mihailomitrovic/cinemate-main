@@ -13,6 +13,7 @@ const WatchList = () => {
   const docRef = doc(db, 'users', uid);
   const [user, setUser] = useState({});
   const [watched, setWatched] = useState(true);
+  const [towatch, setToWatch] = useState(true);
   const [text, setText] = useState('To watch');
   const [filteredBookings, setFilteredBookings] = useState(bookings);
   
@@ -41,7 +42,7 @@ const WatchList = () => {
   }
 
   const toggleSwitch = () =>{
-    if(watched == true){
+    if(!watched){
       setFilteredBookings(bookings.filter(function(item){
         return item.data().watched == true;
       }))
@@ -53,6 +54,7 @@ const WatchList = () => {
       }))
     }
     setWatched(previousState => !previousState);
+    setToWatch(previousState => !previousState);
   }
 
   const updateBooking = async(id) => {
@@ -101,7 +103,7 @@ const WatchList = () => {
         <Switch 
           trackColor={{true:'#c9a76d'}}
           onValueChange = {toggleSwitch}
-          value = {watched == false}
+          value = {watched}
         />
       </View>
       

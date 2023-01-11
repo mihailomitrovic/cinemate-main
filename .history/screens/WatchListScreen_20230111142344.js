@@ -36,7 +36,7 @@ const WatchList = () => {
         querySnapshot.forEach((doc) => {            
         a.push(doc.data());
       });
-      setBookings(querySnapshot.docs);
+      setBookings(q);
     });
   }
 

@@ -90,9 +90,10 @@ const WatchList = () => {
   }
 
   useEffect(() => {
-    const resultOfFiltering = bookings
-    setFilteredBookings(resultOfFiltering)
-  }, [bookings])
+    if(watched == true){
+      setFilteredBookings(bookings.filter(function(item){
+        return item.data().watched == true;
+      }))
 
   return (
     <View style = {styles.background}>

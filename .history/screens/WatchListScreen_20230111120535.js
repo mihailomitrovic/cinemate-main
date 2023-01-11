@@ -41,7 +41,7 @@ const WatchList = () => {
   }
 
   const toggleSwitch = () =>{
-    if(watched == true){
+    if(!watched){
       setFilteredBookings(bookings.filter(function(item){
         return item.data().watched == true;
       }))
@@ -89,8 +89,13 @@ const WatchList = () => {
     console.log('deleted:' + id)
   }
 
+  const [rerenderToggle, setRerenderToggle] = useState(true);
+
+
+
   useEffect(() => {
     const resultOfFiltering = bookings
+    setRerenderToggle(!rerenderToggle)
     setFilteredBookings(resultOfFiltering)
   }, [bookings])
 
@@ -101,7 +106,7 @@ const WatchList = () => {
         <Switch 
           trackColor={{true:'#c9a76d'}}
           onValueChange = {toggleSwitch}
-          value = {watched == false}
+          value = {watched}
         />
       </View>
       
@@ -111,7 +116,7 @@ const WatchList = () => {
         style = {{marginBottom: 85}}
         showsVerticalScrollIndicator = {false}
         numColumns = {1}
-        extraData = {watched}
+        extraData={rerenderToggle} 
 
         renderItem  = {({item}) => (
           <View style = {styles.listItem}>
@@ -121,11 +126,11 @@ const WatchList = () => {
           </View>
           <View style = {styles.deleteContainer}>
             {item.data().watched == true ? (
-                <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id)}}>
+                <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id); setFilteredBookings();}}>
                 <Image source={require('../assets/watched.png')} style = {styles.buttonIcon} />
                 </TouchableOpacity>
             ) : (
-            <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id)}}>
+            <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id);}}>
             <Image source={require('../assets/towatch.png')} style = {styles.buttonIcon} />
             </TouchableOpacity>)}
 

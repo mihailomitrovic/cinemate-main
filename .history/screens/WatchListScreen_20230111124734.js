@@ -41,7 +41,7 @@ const WatchList = () => {
   }
 
   const toggleSwitch = () =>{
-    if(watched == true){
+    if(!watched){
       setFilteredBookings(bookings.filter(function(item){
         return item.data().watched == true;
       }))
@@ -70,7 +70,7 @@ const WatchList = () => {
   const updateBooking1 = async(id) => {
     try {
       await setDoc(doc(db, 'booking', id), {
-        watched: false
+        watched: true
       }, {merge: true})
     }
     catch(e) {
@@ -94,15 +94,12 @@ const WatchList = () => {
     setFilteredBookings(resultOfFiltering)
   }, [bookings])
 
+
   return (
     <View style = {styles.background}>
       <View style = {styles.pickContainer}>
         <Text style = {styles.pick}>{text}</Text>
-        <Switch 
-          trackColor={{true:'#c9a76d'}}
-          onValueChange = {toggleSwitch}
-          value = {watched == false}
-        />
+        <Switch trackColor={{true:'#c9a76d'}} onValueChange = {toggleSwitch} value = {watched}/>
       </View>
       
       <FlatList
@@ -111,7 +108,6 @@ const WatchList = () => {
         style = {{marginBottom: 85}}
         showsVerticalScrollIndicator = {false}
         numColumns = {1}
-        extraData = {watched}
 
         renderItem  = {({item}) => (
           <View style = {styles.listItem}>
@@ -125,7 +121,7 @@ const WatchList = () => {
                 <Image source={require('../assets/watched.png')} style = {styles.buttonIcon} />
                 </TouchableOpacity>
             ) : (
-            <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.id)}}>
+            <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking1(item.id);}}>
             <Image source={require('../assets/towatch.png')} style = {styles.buttonIcon} />
             </TouchableOpacity>)}
 
@@ -136,6 +132,7 @@ const WatchList = () => {
           </View>
         )}
       />
+
           </View>
   )
 }
