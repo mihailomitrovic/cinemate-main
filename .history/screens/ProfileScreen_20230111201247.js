@@ -22,17 +22,23 @@ const ProfileScreen = () => {
         .catch(error => alert(error.message))
   }
 
-  const deleteAccount = async() => {
-    firebase.firestore.QuerySnapshot = await this.afs.collection('bookings', ref => ref.where('email', '==', this.afAuth.auth.currentUser.email)).ref.get()
+  const deleteAccount = () => {
+    firebase.firestore.QuerySnapshot = this.afs.collection('users', ref => ref.where('email', '==', auth.currentUser.email)).ref.get()
     .then(qry => {
       const batch = this.afs.firestore.batch();
       qry.forEach(doc => batch.delete(doc.ref));
-      return batch.commit();
+      return batch.commit()
+      .then(() => {
+        console.log('obrisan profil na auth');
+        console.log(korisnikID);
+        
+        deleteUser(user);
+      }).catch((error) => {
+        console.log(error);
+        console.log("No way");
+      });
     })
-    .then(() => console.log('done'))
-    .catch(err => console.log(`failed with ${err.message}`))
   }
-  
   
   const handleDeleteProfile = () => {
     

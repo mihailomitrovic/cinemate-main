@@ -93,6 +93,8 @@ const WatchList = () => {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
+    const resultOfFiltering = bookings;
+    setFilteredBookings(resultOfFiltering);
     setLoading(false);
   }, [bookings])
 

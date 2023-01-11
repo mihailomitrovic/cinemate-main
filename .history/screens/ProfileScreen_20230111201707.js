@@ -22,14 +22,14 @@ const ProfileScreen = () => {
         .catch(error => alert(error.message))
   }
 
-  const deleteAccount = async() => {
-    firebase.firestore.QuerySnapshot = await this.afs.collection('bookings', ref => ref.where('email', '==', this.afAuth.auth.currentUser.email)).ref.get()
+  const deleteAccount = () => {
+    firebase.firestore.QuerySnapshot = this.afs.collection('houses', ref => ref.where('email', '==', this.afAuth.auth.currentUser.email)).ref.get()
     .then(qry => {
       const batch = this.afs.firestore.batch();
       qry.forEach(doc => batch.delete(doc.ref));
       return batch.commit();
     })
-    .then(() => console.log('done'))
+    .then(() => {console.log('done'); navigation.navigate('Welcome');})
     .catch(err => console.log(`failed with ${err.message}`))
   }
   

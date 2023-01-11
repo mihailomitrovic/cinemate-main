@@ -5,7 +5,6 @@ import { auth, db } from '../firebase'
 import { deleteDoc, doc, getDoc, setDoc} from '@firebase/firestore'
 import { useEffect, useState, setState } from 'react'
 import { collection, query, where, onSnapshot } from "firebase/firestore";
-import { ActivityIndicator } from 'react-native-web'
 
 
 const WatchList = () => {
@@ -90,10 +89,9 @@ const WatchList = () => {
     console.log('deleted:' + id)
   }
 
-  const [isLoading, setLoading] = useState(true);
-
   useEffect(() => {
-    setLoading(false);
+    const resultOfFiltering = bookings
+    setFilteredBookings(resultOfFiltering)
   }, [bookings])
 
   return (
@@ -107,8 +105,7 @@ const WatchList = () => {
         />
       </View>
       
-      {isLoading == true ? (<></>) : (
-        <FlatList
+      <FlatList
         data = {filteredBookings}
         contentContainerStyle = {styles.flat1}
         style = {{marginBottom: 85}}
@@ -138,7 +135,7 @@ const WatchList = () => {
           </View>
           </View>
         )}
-      />) }
+      />
           </View>
   )
 }

@@ -24,6 +24,7 @@ const ModalScreen = ({route}) => {
       showtime: showtime,
       watched: false, 
       users: arrayUnion(user.uid),
+      movieID: movieRef
     }, {merge: true}).then (() => {
      navigation.navigate('WatchList', {id: bookingid});
     }

@@ -2,11 +2,10 @@ import { View, ScrollView, Text, StyleSheet, Image, TouchableOpacity, FlatList} 
 import React, { useState }from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { auth, db } from '../firebase'
-import { doc, setDoc, arrayUnion, DocumentReference, Document} from '@firebase/firestore'
+import { doc, setDoc, arrayUnion} from '@firebase/firestore'
 
 const ModalScreen = ({route}) => {
   const fixedDays = ["Monday", "Tuesday", "Wednesday","Thursday", "Friday","Saturday","Sunday"];
-  const fixedHours = ["20:00","21:00","22:00"];
 
   const [day, setDay] = useState('')
   const [showtime, setShowtime] = useState('')
@@ -25,6 +24,7 @@ const ModalScreen = ({route}) => {
       watched: false, 
       users: arrayUnion(user.uid),
     }, {merge: true}).then (() => {
+     console.log(route.params.id)
      navigation.navigate('WatchList', {id: bookingid});
     }
     )

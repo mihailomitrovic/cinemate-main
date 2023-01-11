@@ -25,6 +25,8 @@ const WatchList = () => {
     getBookings();
   },[])
 
+  const [isLoading, setLoading] = useState(true);
+
   const getUser = async () => {
     const snap = await getDoc(docRef)
     setUser({user, ...snap.data()})
@@ -90,9 +92,9 @@ const WatchList = () => {
     console.log('deleted:' + id)
   }
 
-  const [isLoading, setLoading] = useState(true);
-
   useEffect(() => {
+    const resultOfFiltering = bookings;
+    setFilteredBookings(resultOfFiltering);
     setLoading(false);
   }, [bookings])
 
@@ -107,7 +109,8 @@ const WatchList = () => {
         />
       </View>
       
-      {isLoading == true ? (<></>) : (
+      {isLoading == true ? (
+        <ActivityIndicator/>) : (
         <FlatList
         data = {filteredBookings}
         contentContainerStyle = {styles.flat1}

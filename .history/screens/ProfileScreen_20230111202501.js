@@ -22,7 +22,7 @@ const ProfileScreen = () => {
         .catch(error => alert(error.message))
   }
 
-  const deleteAccount = async() => {
+  deleteAccount = () => {
     firebase.firestore.QuerySnapshot = await this.afs.collection('bookings', ref => ref.where('email', '==', this.afAuth.auth.currentUser.email)).ref.get()
     .then(qry => {
       const batch = this.afs.firestore.batch();

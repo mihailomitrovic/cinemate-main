@@ -2,11 +2,10 @@ import { View, ScrollView, Text, StyleSheet, Image, TouchableOpacity, FlatList} 
 import React, { useState }from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { auth, db } from '../firebase'
-import { doc, setDoc, arrayUnion, DocumentReference, Document} from '@firebase/firestore'
+import { doc, setDoc, arrayUnion} from '@firebase/firestore'
 
 const ModalScreen = ({route}) => {
   const fixedDays = ["Monday", "Tuesday", "Wednesday","Thursday", "Friday","Saturday","Sunday"];
-  const fixedHours = ["20:00","21:00","22:00"];
 
   const [day, setDay] = useState('')
   const [showtime, setShowtime] = useState('')
@@ -16,6 +15,7 @@ const ModalScreen = ({route}) => {
   const bookMovie = async() => {
     var bookingid = route.params.name + day + showtime;
     console.log(bookingid);
+    const movieRef = db.collection('movies').doc(route.params.id);
 
   try {
     await setDoc(doc(db, 'booking', bookingid), {
@@ -24,6 +24,7 @@ const ModalScreen = ({route}) => {
       showtime: showtime,
       watched: false, 
       users: arrayUnion(user.uid),
+      movieID: movieRef
     }, {merge: true}).then (() => {
      navigation.navigate('WatchList', {id: bookingid});
     }

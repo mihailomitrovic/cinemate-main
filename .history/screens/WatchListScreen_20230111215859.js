@@ -93,6 +93,8 @@ const WatchList = () => {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
+    const resultOfFiltering = bookings;
+    setFilteredBookings(resultOfFiltering);
     setLoading(false);
   }, [bookings])
 
@@ -107,7 +109,8 @@ const WatchList = () => {
         />
       </View>
       
-      {isLoading == true ? (<></>) : (
+      {isLoading == true ? (
+        <ActivityIndicator/>) : (
         <FlatList
         data = {filteredBookings}
         contentContainerStyle = {styles.flat1}
