@@ -22,11 +22,13 @@ const ModalScreen = ({route}) => {
   try {
     await setDoc(doc(db, 'booking', bookingid), {
       movie: route.params.name,
+      movieDoc: route.id,
       day: day,
       showtime: showtime,
       watched: false, 
       users: arrayUnion(user.uid),
-    }, {merge: true}).then (() => {
+    }, {merge: true});
+    console.log(q).then (() => {
      navigation.navigate('WatchList', {id: bookingid});
     }
     )

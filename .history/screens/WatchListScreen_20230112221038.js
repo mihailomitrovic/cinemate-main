@@ -54,6 +54,7 @@ const WatchList = () => {
       const array = Object.values(querySnapshot.docs);
       setBookingsToWatch(array);
       setLoading(false);
+
     });
   }
   const updateBooking = async(item) => {
@@ -193,6 +194,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#27272A',
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   pickContainer: {
     backgroundColor: '#efedef',

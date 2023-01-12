@@ -20,6 +20,7 @@ const ModalScreen = ({route}) => {
   const moviesRef = collection(db, "movies"); // imamo ref ka bazi
 
   try {
+    console.log(route.params)
     await setDoc(doc(db, 'booking', bookingid), {
       movie: route.params.name,
       day: day,

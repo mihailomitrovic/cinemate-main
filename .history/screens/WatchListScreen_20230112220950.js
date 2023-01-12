@@ -21,6 +21,7 @@ const WatchList = () => {
     getUser();
     getWatchedBookings();
     getBookingsToWatch();
+    setLoading(false);
     console.log("Prvi useEffect");
     return(()=>{
       console.log("gotovUseEffect");
@@ -41,7 +42,6 @@ const WatchList = () => {
       });
       const array = Object.values(querySnapshot.docs);
       setWatchedBookings(array);
-      setLoading(false);
     });
   }
   const getBookingsToWatch = async () =>{
@@ -53,7 +53,6 @@ const WatchList = () => {
       });
       const array = Object.values(querySnapshot.docs);
       setBookingsToWatch(array);
-      setLoading(false);
     });
   }
   const updateBooking = async(item) => {
@@ -193,6 +192,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#27272A',
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   pickContainer: {
     backgroundColor: '#efedef',

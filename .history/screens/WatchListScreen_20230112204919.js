@@ -10,13 +10,12 @@ const WatchList = () => {
   const uid = auth.currentUser.uid;
   const docRef = doc(db, 'users', uid);
   const [user, setUser] = useState({});
-  const [displayText, setDisplayText] = useState("Watched");
+  const [displayText, setDisplayText] = useState("Seen");
   const bookingsRef = collection(db, "booking"); // imamo ref ka bazi
   
   const [bookings, setBookings] = useState({});
   const [bookingsToWatch, setBookingsToWatch] = useState({});
   const [watchedBookings, setWatchedBookings] = useState({});
-  
   useEffect(() => {
     getUser();
     getWatchedBookings();
@@ -51,9 +50,8 @@ const WatchList = () => {
         querySnapshot.forEach((doc) => {            
         a.push(doc.data());
       });
-      const array = Object.values(querySnapshot.docs);
+      const array = Object.values(querySnapshot.docs)
       setBookingsToWatch(array);
-      setLoading(false);
     });
   }
   const updateBooking = async(item) => {
@@ -81,9 +79,9 @@ const WatchList = () => {
   }
 
   const changeDisplayText = () =>{
-    if(displayText == "Watched"){
-      setDisplayText("To watch")
-    } else setDisplayText("Watched");
+    if(displayText == "To watch"){
+      setDisplayText("Watched")
+    } else setDisplayText("To watch");
   }
 
   const [isLoading, setLoading] = useState(true);
@@ -102,8 +100,7 @@ const WatchList = () => {
         </TouchableOpacity>
       </View>
 
-      {!isLoading ? (
-      <FlatList
+      {!isLoading ?  (<FlatList
           data  = {displayText == "To watch" ? (bookingsToWatch):(watchedBookings)}
           contentContainerStyle = {styles.flat1}
           style = {{marginBottom: 85}}
@@ -118,15 +115,9 @@ const WatchList = () => {
               </View>
 
               <View style = {styles.buttonsContainer}>
-                {displayText == 'To watch' ? (
-                  <TouchableOpacity onPress = {()=>{updateBooking(item)}} style = {styles.buttonContainer}>
-                  <Image source={require('../assets/towatch.png')} style = {styles.buttonIcon}/>  
-                </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity onPress = {()=>{updateBooking(item)}} style = {styles.buttonContainer}>
-                  <Image source={require('../assets/watched.png')} style = {styles.buttonIcon}/>  
-                  </TouchableOpacity>
-                )}
+              <TouchableOpacity onPress = {()=>{updateBooking(item)}} style = {styles.buttonContainer}>
+                <Image source={require('../assets/towatch.png')} style = {styles.buttonIcon}/>  
+              </TouchableOpacity>
 
               <TouchableOpacity onPress = {()=>{deleteBooking(item.id);}} style = {styles.buttonContainer}>
                 <Image source={require('../assets/remove.png')} style = {styles.buttonIcon}/>  
@@ -193,6 +184,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#27272A',
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   pickContainer: {
     backgroundColor: '#efedef',
@@ -243,7 +235,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     padding: 2,
-    paddingLeft: 8
+    paddingLeft: 6
   },
   buttonIcon: {
     resizeMode: 'contain', 
@@ -254,11 +246,10 @@ const styles = StyleSheet.create({
   buttonContainer: {
     backgroundColor: '#e43e54',
     padding: 8,
-    margin: 8,
+    margin: 10,
     borderRadius: 10
   },
   buttonsContainer: {
     flexDirection: 'row',
-    marginRight: 5
   }
 })

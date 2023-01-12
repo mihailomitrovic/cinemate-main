@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { auth, db } from '../firebase'
-import { doc, getDoc, deleteDoc, query, collection, where, firebase, onSnapshot, snapshot} from '@firebase/firestore'
+import { doc, getDoc, deleteDoc, query, collection, where, firebase} from '@firebase/firestore'
 import { useEffect, useState } from 'react'
 import { getAuth, deleteUser} from "firebase/auth";
 
@@ -26,13 +26,34 @@ const ProfileScreen = () => {
     
     const korisnikID = getAuth().currentUser.uid;
     const user = getAuth().currentUser;
-    const bookingsRef = collection(db, "booking");
-    const q = query(bookingsRef, where("users","array-contains",auth.currentUser.uid));
 
     auth.signOut()
     .then(() => {
       navigation.navigate('Welcome');
       deleteDoc(doc(db, "users", korisnikID))
+      var postsRef = collection(db, 'users');
+      var postsQuery = query(postsRef, where('id', '==', uid)).get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            console.log(doc.id, '=>', doc.data());
+            var deleteDoc = db.collection('users').doc(doc.id).delete();
+          });
+        })
+        .catch(err => {
+          console.log('Error getting documents', err);
+        });
+    
+      var postsRef = collection(db, 'booking');
+      var postsQuery = query(postsRef, where('id', '==', uid)).get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            console.log(doc.id, '=>', doc.data());
+            var deleteDoc = db.collection('booking').doc(doc.id).delete();
+          });
+        })
+        .catch(err => {
+          console.log('Error getting documents', err);
+        })
       .then(() => {
         console.log('obrisan profil na auth');
         console.log(korisnikID);

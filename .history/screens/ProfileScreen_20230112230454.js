@@ -32,6 +32,12 @@ const ProfileScreen = () => {
     auth.signOut()
     .then(() => {
       navigation.navigate('Welcome');
+      const unsubscribe = onSnapshot(q, () => {
+        snapshot.forEach(doc => {
+          console.log(doc.id, '=>', doc.data());
+          var deleteDoc = db.collection('booking').doc(doc.id).delete();
+        })
+      });
       deleteDoc(doc(db, "users", korisnikID))
       .then(() => {
         console.log('obrisan profil na auth');

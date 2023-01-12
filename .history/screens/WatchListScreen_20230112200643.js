@@ -10,13 +10,12 @@ const WatchList = () => {
   const uid = auth.currentUser.uid;
   const docRef = doc(db, 'users', uid);
   const [user, setUser] = useState({});
-  const [displayText, setDisplayText] = useState("Watched");
+  const [displayText, setDisplayText] = useState("Seen");
   const bookingsRef = collection(db, "booking"); // imamo ref ka bazi
   
   const [bookings, setBookings] = useState({});
   const [bookingsToWatch, setBookingsToWatch] = useState({});
   const [watchedBookings, setWatchedBookings] = useState({});
-  
   useEffect(() => {
     getUser();
     getWatchedBookings();
@@ -51,9 +50,8 @@ const WatchList = () => {
         querySnapshot.forEach((doc) => {            
         a.push(doc.data());
       });
-      const array = Object.values(querySnapshot.docs);
+      const array = Object.values(querySnapshot.docs)
       setBookingsToWatch(array);
-      setLoading(false);
     });
   }
   const updateBooking = async(item) => {
@@ -81,29 +79,21 @@ const WatchList = () => {
   }
 
   const changeDisplayText = () =>{
-    if(displayText == "Watched"){
-      setDisplayText("To watch")
-    } else setDisplayText("Watched");
+    if(displayText == "To watch"){
+      setDisplayText("Seen")
+    } else setDisplayText("To watch");
   }
 
   const [isLoading, setLoading] = useState(true);
 
 
-  /* <Button title = {`${item.data().watched}`}  onPress = {()=>{updateBooking(item); }}/>
-  <Button title = "Delete" onPress = {()=>{deleteBooking(item.id);}}/> */
-              
-
-
   return (
     <View style = {styles.background}>
       <View style = {styles.pickContainer}>
-        <TouchableOpacity  title = {displayText} onPress = {()=> {changeDisplayText(); }}>
-          <Text style = {styles.pick} >{displayText}</Text>
-        </TouchableOpacity>
+        <Button  title = {displayText} style = {styles.pick} onPress = {()=> {changeDisplayText(); }} />
       </View>
 
-      {!isLoading ? (
-      <FlatList
+      {isLoading ?  (<FlatList
           data  = {displayText == "To watch" ? (bookingsToWatch):(watchedBookings)}
           contentContainerStyle = {styles.flat1}
           style = {{marginBottom: 85}}
@@ -115,23 +105,11 @@ const WatchList = () => {
               <View style = {styles.itemData}>
                 <Text style = {styles.basicBold}>{item.data().movie}</Text>
                 <Text style = {styles.basic}>{item.data().day} - {item.data().showtime}</Text>
-              </View>
+              </View> 
 
-              <View style = {styles.buttonsContainer}>
-                {displayText == 'To watch' ? (
-                  <TouchableOpacity onPress = {()=>{updateBooking(item)}} style = {styles.buttonContainer}>
-                  <Image source={require('../assets/towatch.png')} style = {styles.buttonIcon}/>  
-                </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity onPress = {()=>{updateBooking(item)}} style = {styles.buttonContainer}>
-                  <Image source={require('../assets/watched.png')} style = {styles.buttonIcon}/>  
-                  </TouchableOpacity>
-                )}
-
-              <TouchableOpacity onPress = {()=>{deleteBooking(item.id);}} style = {styles.buttonContainer}>
-                <Image source={require('../assets/remove.png')} style = {styles.buttonIcon}/>  
-              </TouchableOpacity>
-            </View>
+              <Button title = {`${item.data().watched}`}  onPress = {()=>{updateBooking(item); }}/>
+              <Button title = "Delete" onPress = {()=>{deleteBooking(item.id);}}/>
+                          
             </View>
             
           )}
@@ -193,6 +171,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#27272A',
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   pickContainer: {
     backgroundColor: '#efedef',
@@ -209,6 +188,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 18,
     textAlignVertical: 'center',
+    marginRight: 10
   },
   listItem: {
     backgroundColor: '#27272a',
@@ -236,29 +216,20 @@ const styles = StyleSheet.create({
     color: '#efedef',
     fontSize: 15,
     padding: 2,
-    paddingLeft: 8
+    paddingLeft: 6
   },
   basicBold: {
     color: '#efedef',
     fontSize: 15,
     fontWeight: 'bold',
     padding: 2,
-    paddingLeft: 8
+    paddingLeft: 6
   },
+  
+ 
   buttonIcon: {
     resizeMode: 'contain', 
-    width: 18,
-    height: 18,
+    width: 20,
     tintColor: '#efedef'
-  },
-  buttonContainer: {
-    backgroundColor: '#e43e54',
-    padding: 8,
-    margin: 8,
-    borderRadius: 10
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    marginRight: 5
   }
 })

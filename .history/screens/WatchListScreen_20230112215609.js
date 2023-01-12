@@ -51,9 +51,8 @@ const WatchList = () => {
         querySnapshot.forEach((doc) => {            
         a.push(doc.data());
       });
-      const array = Object.values(querySnapshot.docs);
+      const array = Object.values(querySnapshot.docs)
       setBookingsToWatch(array);
-      setLoading(false);
     });
   }
   const updateBooking = async(item) => {
@@ -102,8 +101,7 @@ const WatchList = () => {
         </TouchableOpacity>
       </View>
 
-      {!isLoading ? (
-      <FlatList
+      {!isLoading ?  (<FlatList
           data  = {displayText == "To watch" ? (bookingsToWatch):(watchedBookings)}
           contentContainerStyle = {styles.flat1}
           style = {{marginBottom: 85}}
@@ -193,6 +191,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#27272A',
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   pickContainer: {
     backgroundColor: '#efedef',

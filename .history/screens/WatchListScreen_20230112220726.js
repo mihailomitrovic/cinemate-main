@@ -96,13 +96,13 @@ const WatchList = () => {
 
   return (
     <View style = {styles.background}>
-      <View style = {styles.pickContainer}>
-        <TouchableOpacity  title = {displayText} onPress = {()=> {changeDisplayText(); }}>
-          <Text style = {styles.pick} >{displayText}</Text>
-        </TouchableOpacity>
-      </View>
 
       {!isLoading ? (
+            <View style = {styles.pickContainer}>
+            <TouchableOpacity  title = {displayText} onPress = {()=> {changeDisplayText(); }}>
+              <Text style = {styles.pick} >{displayText}</Text>
+            </TouchableOpacity>
+          </View>
       <FlatList
           data  = {displayText == "To watch" ? (bookingsToWatch):(watchedBookings)}
           contentContainerStyle = {styles.flat1}
@@ -193,6 +193,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#27272A',
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   pickContainer: {
     backgroundColor: '#efedef',

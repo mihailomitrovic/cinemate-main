@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { auth, db } from '../firebase'
-import { doc, getDoc, deleteDoc, query, collection, where, firebase, onSnapshot, snapshot} from '@firebase/firestore'
+import { doc, getDoc, deleteDoc, query, collection, where, firebase} from '@firebase/firestore'
 import { useEffect, useState } from 'react'
 import { getAuth, deleteUser} from "firebase/auth";
 
@@ -26,8 +26,6 @@ const ProfileScreen = () => {
     
     const korisnikID = getAuth().currentUser.uid;
     const user = getAuth().currentUser;
-    const bookingsRef = collection(db, "booking");
-    const q = query(bookingsRef, where("users","array-contains",auth.currentUser.uid));
 
     auth.signOut()
     .then(() => {

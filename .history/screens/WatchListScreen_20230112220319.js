@@ -102,8 +102,7 @@ const WatchList = () => {
         </TouchableOpacity>
       </View>
 
-      {!isLoading ? (
-      <FlatList
+      {isLoading ? (<FlatList
           data  = {displayText == "To watch" ? (bookingsToWatch):(watchedBookings)}
           contentContainerStyle = {styles.flat1}
           style = {{marginBottom: 85}}
@@ -193,6 +192,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#27272A',
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   pickContainer: {
     backgroundColor: '#efedef',

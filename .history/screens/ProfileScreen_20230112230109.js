@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { auth, db } from '../firebase'
-import { doc, getDoc, deleteDoc, query, collection, where, firebase, onSnapshot, snapshot} from '@firebase/firestore'
+import { doc, getDoc, deleteDoc, query, collection, where, firebase} from '@firebase/firestore'
 import { useEffect, useState } from 'react'
 import { getAuth, deleteUser} from "firebase/auth";
 
@@ -32,6 +32,12 @@ const ProfileScreen = () => {
     auth.signOut()
     .then(() => {
       navigation.navigate('Welcome');
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        snapshot.forEach(doc => {
+          console.log(doc.id, '=>', doc.data());
+          var deleteDoc = db.collection('users').doc(doc.id).delete();
+        })
+      };
       deleteDoc(doc(db, "users", korisnikID))
       .then(() => {
         console.log('obrisan profil na auth');

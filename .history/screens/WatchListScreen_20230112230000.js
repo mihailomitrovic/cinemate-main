@@ -35,10 +35,10 @@ const WatchList = () => {
   const getWatchedBookings = async () =>{
     const q = query(bookingsRef, where("users","array-contains",auth.currentUser.uid),where("watched","==",true) ); // basic kveri
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const a = [];
-        querySnapshot.forEach((doc) => {            
-        a.push(doc.data());
-      });
+        snapshot.forEach(doc => {
+          console.log(doc.id, '=>', doc.data());
+          var deleteDoc = db.collection('users').doc(doc.id).delete();
+        })
       const array = Object.values(querySnapshot.docs);
       setWatchedBookings(array);
       setLoading(false);

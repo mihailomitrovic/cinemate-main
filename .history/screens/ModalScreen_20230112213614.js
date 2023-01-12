@@ -18,6 +18,8 @@ const ModalScreen = ({route}) => {
     console.log(bookingid);
 
   const moviesRef = collection(db, "movies"); // imamo ref ka bazi
+  const q = query(moviesRef, where("title","==",route.params.name)) // basic kveri
+
 
   try {
     await setDoc(doc(db, 'booking', bookingid), {
@@ -26,7 +28,8 @@ const ModalScreen = ({route}) => {
       showtime: showtime,
       watched: false, 
       users: arrayUnion(user.uid),
-    }, {merge: true}).then (() => {
+    }, {merge: true});
+    console.log(q).then (() => {
      navigation.navigate('WatchList', {id: bookingid});
     }
     )
