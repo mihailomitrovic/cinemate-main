@@ -1,11 +1,8 @@
-import {View, Text, StyleSheet, FlatList, Switch, TouchableOpacity, Image} from 'react-native'
-import CheckBox from 'react-native-bouncy-checkbox'
+import {View, Text, StyleSheet, FlatList, Button, TouchableOpacity, Image} from 'react-native'
 import React from 'react'
 import { auth, db } from '../firebase'
-import { deleteDoc, doc, getDoc, setDoc} from '@firebase/firestore'
-import { useEffect, useState, setState } from 'react'
-import { collection, query, where, onSnapshot } from "firebase/firestore";
-import { ActivityIndicator } from 'react-native-web'
+import { collection, query, where, onSnapshot,deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import { useEffect, useState} from 'react'
 
 
 const WatchList = () => {
@@ -13,16 +10,20 @@ const WatchList = () => {
   const uid = auth.currentUser.uid;
   const docRef = doc(db, 'users', uid);
   const [user, setUser] = useState({});
-  const [watched, setWatched] = useState(true);
-  const [text, setText] = useState('To watch');
-  const [filteredBookings, setFilteredBookings] = useState(bookings);
-  
+  const [displayText, setDisplayText] = useState("To watch");
   const bookingsRef = collection(db, "booking"); // imamo ref ka bazi
   
   const [bookings, setBookings] = useState({});
+  const [bookingsToWatch, setBookingsToWatch] = useState({});
+  const [watchedBookings, setWatchedBookings] = useState({});
   useEffect(() => {
     getUser();
-    getBookings();
+    getWatchedBookings();
+    getBookingsToWatch();
+    console.log("Prvi useEffect");
+    return(()=>{
+      console.log("gotovUseEffect");
+    });
   },[])
 
   const getUser = async () => {
@@ -30,57 +31,42 @@ const WatchList = () => {
     setUser({user, ...snap.data()})
   }
 
-  const getBookings = async () =>{
-    const q = query(bookingsRef, where("users","array-contains",auth.currentUser.uid)); // basic kveri
+  const getWatchedBookings = async () =>{
+    const q = query(bookingsRef, where("users","array-contains",auth.currentUser.uid),where("watched","==",true) ); // basic kveri
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         const a = [];
         querySnapshot.forEach((doc) => {            
         a.push(doc.data());
       });
-      setBookings(querySnapshot.docs);
+      
+      setWatchedBookings(querySnapshot.docs);
     });
   }
-
-  const toggleSwitch = () =>{
-    if(watched == true){
-      setFilteredBookings(bookings.filter(function(item){
-        return item.data().watched == true;
-      }))
-      setText('Watched');
-    } else {
-      setText('To watch');
-      setFilteredBookings(bookings.filter(function(item){
-        return item.data().watched == false;
-      }))
-    }
-    setWatched(previousState => !previousState);
+  const getBookingsToWatch = async () =>{
+    const q = query(bookingsRef, where("users","array-contains",auth.currentUser.uid),where("watched","==",false) ); // basic kveri
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const a = [];
+        querySnapshot.forEach((doc) => {            
+        a.push(doc.data());
+      });
+      
+      setBookingsToWatch(querySnapshot.docs);
+    });
   }
-
-  const updateBooking = async(id) => {
+  const updateBooking = async(item) => {
     try {
-      await setDoc(doc(db, 'booking', id), {
-        watched: true
+      await setDoc(doc(db, 'booking', item.id), {
+        watched: !item.data().watched
       }, {merge: true})
+      
     }
     catch(e) {
       console.log(e)
     }
-    console.log('postaje watched:' + id)
-  }
-
-  const updateBooking1 = async(id) => {
-    try {
-      await setDoc(doc(db, 'booking', id), {
-        watched: false
-      }, {merge: true})
-    }
-    catch(e) {
-      console.log(e)
-    }
-    console.log('postaje watched:' + id)
   }
 
   const deleteBooking = async(id) => {
+    console.log("pozvano brisanje");
     try {
       await deleteDoc(doc(db, 'booking', id));
     }
@@ -90,31 +76,57 @@ const WatchList = () => {
     console.log('deleted:' + id)
   }
 
-  const [isLoading, setLoading] = useState(true);
+  const changeDisplayText = () =>{
+    if(displayText == "To watch"){
+      setDisplayText("Seen")
+    } else setDisplayText("To watch");
+  }
 
-  useEffect(() => {
-    setLoading(false);
-  }, [bookings])
+
+
+
 
   return (
     <View style = {styles.background}>
       <View style = {styles.pickContainer}>
-        <Text style = {styles.pick}>{text}</Text>
-        <Switch 
-          trackColor={{true:'#c9a76d'}}
-          onValueChange = {toggleSwitch}
-          value = {watched == false}
-        />
+        <Button  title = {displayText} style = {styles.pick} onPress = {()=> {changeDisplayText(); }} />
       </View>
-      
-      {isLoading == true ? (<></>) : (
+
         <FlatList
-        data = {filteredBookings}
+          data  = {displayText == "To watch" ? (bookingsToWatch):(watchedBookings)}
+          contentContainerStyle = {styles.flat1}
+          style = {{marginBottom: 85}}
+          showsVerticalScrollIndicator = {false}
+          
+
+          renderItem = {({item}) =>(
+            <View style = {styles.listItem}>
+              <View style = {styles.itemData}>
+                <Text style = {styles.basicBold}>{item.data().movie}</Text>
+                <Text style = {styles.basic}>{item.data().day} - {item.data().showtime}</Text>
+              </View> 
+
+              <Button title = {`${item.data().watched}`}  onPress = {()=>{updateBooking(item); }}/>
+              <Button title = "Delete" onPress = {()=>{deleteBooking(item.id);}}/>
+                          
+            </View>
+            
+          )}
+        />
+      
+      </View>
+  )
+}
+/*
+ <FlatList
+        data = {bookings}
+        
         contentContainerStyle = {styles.flat1}
         style = {{marginBottom: 85}}
         showsVerticalScrollIndicator = {false}
         numColumns = {1}
-        extraData = {watched}
+        
+        extraData = {bookings}
 
         renderItem  = {({item}) => (
           <View style = {styles.listItem}>
@@ -139,10 +151,17 @@ const WatchList = () => {
           </View>
         )}
       />) }
-          </View>
-  )
-}
 
+
+      {item.data().watched == true ? (
+                <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.data().id)}}>  
+                <Image source={require('../assets/watched.png')} style = {styles.buttonIcon} />
+                </TouchableOpacity>
+            ) : (
+            <TouchableOpacity style = {styles.delete} onPress = {() => {updateBooking(item.data().id)}}>
+            <Image source={require('../assets/towatch.png')} style = {styles.buttonIcon} />
+            </TouchableOpacity>)}
+*/
 export default WatchList
 
 const styles = StyleSheet.create({
@@ -204,19 +223,8 @@ const styles = StyleSheet.create({
     padding: 2,
     paddingLeft: 6
   },
-  delete: {
-    backgroundColor: '#e43e54',
-    padding: 10,
-    borderRadius: 10,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 2
-  },
-  deleteContainer: {
-    flexDirection: 'row',
-    padding: 15
-  },
+  
+ 
   buttonIcon: {
     resizeMode: 'contain', 
     width: 20,
