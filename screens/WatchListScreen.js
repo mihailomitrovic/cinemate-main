@@ -10,7 +10,7 @@ const WatchList = () => {
   const uid = auth.currentUser.uid;
   const docRef = doc(db, 'users', uid);
   const [user, setUser] = useState({});
-  const [displayText, setDisplayText] = useState("To watch");
+  const [displayText, setDisplayText] = useState("Seen");
   const bookingsRef = collection(db, "booking"); // imamo ref ka bazi
   
   const [bookings, setBookings] = useState({});
@@ -38,8 +38,8 @@ const WatchList = () => {
         querySnapshot.forEach((doc) => {            
         a.push(doc.data());
       });
-      
-      setWatchedBookings(querySnapshot.docs);
+      const array = Object.values(querySnapshot.docs);
+      setWatchedBookings(array);
     });
   }
   const getBookingsToWatch = async () =>{
@@ -49,8 +49,8 @@ const WatchList = () => {
         querySnapshot.forEach((doc) => {            
         a.push(doc.data());
       });
-      
-      setBookingsToWatch(querySnapshot.docs);
+      const array = Object.values(querySnapshot.docs)
+      setBookingsToWatch(array);
     });
   }
   const updateBooking = async(item) => {
@@ -98,7 +98,7 @@ const WatchList = () => {
           style = {{marginBottom: 85}}
           showsVerticalScrollIndicator = {false}
           
-
+          
           renderItem = {({item}) =>(
             <View style = {styles.listItem}>
               <View style = {styles.itemData}>
