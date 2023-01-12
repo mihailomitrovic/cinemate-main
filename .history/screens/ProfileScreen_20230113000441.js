@@ -34,6 +34,7 @@ const ProfileScreen = () => {
       .then(() => {
         console.log('obrisan profil na auth');
         console.log(korisnikID);
+        
         deleteUser(user);
       }).catch((error) => {
         console.log(error);
