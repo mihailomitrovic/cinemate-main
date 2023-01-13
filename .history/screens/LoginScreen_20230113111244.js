@@ -41,11 +41,11 @@ const LoginScreen = () => {
           );
         }, 100);
       }
-      else if (error.code == "auth/user-not-found") {
+      else  (error.code == "auth/user-not-found") {
         setTimeout(() => {
           Alert.alert(
             'Error',
-            'User not found',
+            'User does not exist',
             [{text: 'OK', onPress: () => navigation.navigate('Login')}],
             {cancelable: false},
           );

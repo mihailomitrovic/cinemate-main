@@ -10,7 +10,7 @@ const WatchList = () => {
   const uid = auth.currentUser.uid;
   const docRef = doc(db, 'users', uid);
   const [user, setUser] = useState({});
-  const [displayText, setDisplayText] = useState("To watch");
+  const [displayText, setDisplayText] = useState("Watched");
   const bookingsRef = collection(db, "booking"); // imamo ref ka bazi
   
   const [bookings, setBookings] = useState({});

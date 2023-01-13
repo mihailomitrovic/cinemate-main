@@ -45,7 +45,7 @@ const LoginScreen = () => {
         setTimeout(() => {
           Alert.alert(
             'Error',
-            'User not found',
+            'User does not exist',
             [{text: 'OK', onPress: () => navigation.navigate('Login')}],
             {cancelable: false},
           );
